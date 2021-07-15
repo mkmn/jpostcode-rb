@@ -24,7 +24,9 @@ jobs:
           TIMESTAMP=`date +"%Y%m%d"`
           sed -i -e "s/\(VERSION = '[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}\.\)[0-9]\{8\}'$/\1$TIMESTAMP'/g" lib/jpostcode/version.rb
       - name: Update Gemfile
-        run: bundle update --conservative jpostcode
+        run: |
+          bundle config unset deployment
+          bundle update --conservative jpostcode
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3.10.0
         with:
