@@ -1,4 +1,4 @@
-name: Auto update jpostcode-data
+name: Auto Update jpostcode-data
 
 on:
   repository_dispatch:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  bump-version:
+  auto-update-jpostcode-data:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -20,7 +20,9 @@ jobs:
       - name: Submodule Update
         run: git submodule update --remote --recursive
       - name: Update Gem Version
-        run: sed -i '' -e "s/\(VERSION = '[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}\.\)[0-9]\{8\}'$/\1`date +"%Y%m%d"`'/g" lib/jpostcode/version.rb
+        run: |
+          TIMESTAMP=`date +"%Y%m%d"`
+          sed -i -e "s/\(VERSION = '[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}\.\)[0-9]\{8\}'$/\1$TIMESTAMP'/g" lib/jpostcode/version.rb
       - name: Update Gemfile
         run: bundle update --conservative jpostcode
       - name: Create Pull Request
